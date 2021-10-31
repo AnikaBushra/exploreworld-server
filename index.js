@@ -21,6 +21,7 @@ async function run() {
         const database = client.db('travel-places');
         const placeCollection = database.collection('places');
         const clientCollection = database.collection('user');
+        const tripCollection = database.collection('addtrip');
 
         app.get('/places', async (req, res) => {
             const cursor = placeCollection.find({});
@@ -32,6 +33,21 @@ async function run() {
             const newUser = req.body;
             const result = await clientCollection.insertOne(newUser);
             console.log('hitting the post', req.body);
+            res.json(result);
+        });
+
+        // get api add trip 
+        app.get('/addtrip', async (req, res) => {
+            const cursor = tripCollection.find({});
+            const trips = await cursor.toArray(cursor);
+            res.send(trips);
+        })
+
+        // post api add trip 
+        app.post('/addtrip', async (req, res) => {
+            const trip = req.body;
+            const result = await tripCollection.insertOne(trip);
+            console.log(trip);
             res.json(result);
         })
     }
